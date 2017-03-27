@@ -120,22 +120,13 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>rmd &lt;- Sys.glob(&quot;*.Rmd&quot;)
-rmd &lt;- rmd[rmd != &quot;index.Rmd&quot;]
-html &lt;- sub(&quot;.Rmd&quot;, &quot;.html&quot;, rmd)
-lines &lt;- lapply(rmd, readLines)</code></pre>
 <pre><code>## Warning in FUN(X[[i]], ...): incomplete final line found on '01-first-
 ## viz.Rmd'</code></pre>
-<pre class="r"><code>yaml &lt;- lapply(lines, rmarkdown:::parse_yaml_front_matter)
-cat(&quot;&lt;ul&gt;&quot;)</code></pre>
-<pre><code>## &lt;ul&gt;</code></pre>
-<pre class="r"><code>for (i in seq_along(rmd)) {
-  cat(paste0(&quot;&lt;li&gt;&lt;a href='&quot;, html[i], &quot;'&gt;&quot;, yaml[[i]]$title, &quot;&lt;/a&gt;&lt;br/&gt;&quot;,
-             &quot;&lt;code&gt;&quot;, rmd[i], &quot;&lt;/code&gt;&quot;, &quot;&lt;/li&gt;&quot;))
-}</code></pre>
-<pre><code>## &lt;li&gt;&lt;a href='01-first-viz.html'&gt;Peculiar Federalist Support in Pennsylvania During the Early Republic&lt;/a&gt;&lt;br/&gt;&lt;code&gt;01-first-viz.Rmd&lt;/code&gt;&lt;/li&gt;</code></pre>
-<pre class="r"><code>cat(&quot;&lt;/ul&gt;&quot;)</code></pre>
-<pre><code>## &lt;/ul&gt;</code></pre>
+<ul>
+<li>
+<a href="01-first-viz.html">Peculiar Federalist Support in Pennsylvania During the Early Republic</a><br /><code>01-first-viz.Rmd</code>
+</li>
+</ul>
 
 
 

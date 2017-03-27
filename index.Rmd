@@ -16,4 +16,5 @@ for (i in seq_along(rmd)) {
              "<code>", rmd[i], "</code>", "</li>"))
 }
 cat("</ul>")
+
 ```

@@ -64,13 +64,13 @@ nnv3 %>%
 
 When examining this graph, a researcher will notice several things: 
 
-1. The presence of “independent” support during the 1790s
-2. The absence of Anti-Federalist as an organizing term
-3. The peculiar support for the Constitutional/Federalist in the 1805 election
+1. The presence of “Independent” support during the 1790s
+2. The absence of "Anti-Federalist"" as an organizing term
+3. The peculiar support for the "Constitutional/Federalist" candidate in the 1805 election
 
 To make better sense of this information, a logical step is to connect the support for the independents in the 1790s with the support for the Republicans during the 19th century. This combined group would closely resemble what many would call the Anti-Federalists. A similar operation can be performed that connects the Constitutional/Federalists with the Federalists before and after the 1805 election. This process results in a much cleaner visualization (shown below). 
 
-```{r viz2, echo=FALSE, fig.cap= "*Note: In this graph, the Anti-Federalist category consists of the Republican and Independent affiliaitons \n and the Federalist category consists of the Federalsit and Federalist/Constitutional affiliations.\n Based on data from the New Nation Votes dataset* (http://elections.lib.tufts.edu/)"}
+```{r viz2, echo=FALSE}
 nnv3 %>%
   filter(office == "Governor") %>%
   group_by(affiliation, year) %>%
