@@ -1,30 +1,133 @@
 ---
-title: "First Exploration"
+title: "Peculiar Federalist Support in Pennsylvania During the Early Republic"
 author: "Joshua Catalano"
 date: "March 20, 2017"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r libraries, include=FALSE, message=FALSE}
+library(readr)
+library(stringr)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(lubridate)
+library(forcats)
+```
+```{r data_prep, echo=FALSE, message=FALSE}
+nnv <- read_tsv("all-votes.tsv")
+
+# Clean up variable names
+names(nnv) <- names(nnv) %>% 
+  str_to_lower() %>% 
+  str_replace_all("\\.", "") %>% 
+  str_replace_all("\\s", "_")
+
+extract_year <- function(x) {
+  stopifnot(is.character(x)) 
+  year_char <- stringr::str_extract(x, "\\d{4}") 
+  year_int <- as.integer(year_char)
+  year_int
+}
+
+nnv <- nnv %>%
+  mutate(year = extract_year(nnv$date))
+
+# Create new columns for region and grouped affiliation
+nnv3 <- nnv %>%
+  filter(state == "Pennsylvania") %>%
+  mutate(affiliation_grouped = fct_collapse(affiliation, 
+    "Federalist" = c("Federalist", "Constitutional/Federalist"), "Anti-Federalist" = c("Republican", "Independent"))) %>% 
+  mutate(region = fct_collapse(county, "Western PA" = c("Armstrong", "Beaver", "Butler","Crawford", "Erie", "Jefferson", "Indiana", "Westmoreland", "Westmoreland and Indiana", "Mercer", "Allegheny", "Washington", "Fayette", "Greene", "Somerset", "Venango"), "Eastern PA" = c("Bucks", "Berks", "Chester", "Columbia", "Dauphin", "Delaware", "Franklin", "Lancaster", "Luzerne", "Montgomery", "Northampton", "Pike", "Philadelphia", "Northumberland","Susquehanna",  "Wayne", "York"),  "Central PA" = c("Adams", "Bradford", "Cambria", "Centre", "Clearfield", "Lebanon", "Lehigh", "Lycoming", "McKean", "Warren", "Tioga", "Union", "Schuylkill", "Perry", "Franklin", "Bedford", "Huntingdon", "Cumberland", "Mifflin")))
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+While the visualization of data can often lead to new insights and prompt scholars to ask different research questions, it can also deceive scholars and lead them to draw inaccurate conclusions based upon phantom phenomena that appear in graphs. This essay examines gubernatorial voting in Pennsylvania during the early republic and argues that the appearance of strong Federalist support during the 1805 election is the result of categorical restraints; it is not an accurate representation of voter sentiment.  
+Using the data collected and organized within the New Nation Votes dataset, researchers exploring the gubernatorial voting patterns in Pennsylvania can easily be misled by visualizations created from the data. For example, the following graph shows the voting patterns for governor by party affiliation.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(mtcars)
+```{r viz1, echo=FALSE}
+nnv3 %>%
+  filter(office == "Governor") %>%
+  group_by(affiliation, year) %>%
+  top_n(1, vote) %>%
+  ggplot(aes(x = year, y = vote, color = affiliation)) +
+  geom_point() +
+  geom_line() +
+  labs(title= "Gubernatorial Elections for Pennsylvania",
+       x = "Year",
+       y = "Number of Votes",
+       color= "Party Affiliaiton",
+       caption = "Based on data from the New Nation Votes dataset  (http://elections.lib.tufts.edu/)") +
+  theme(plot.title = element_text(hjust = 0.5)) 
 ```
 
-## Including Plots
+When examining this graph, a researcher will notice several things: 
 
-You can also embed plots, for example:
+1. The presence of “independent” support during the 1790s
+2. The absence of Anti-Federalist as an organizing term
+3. The peculiar support for the Constitutional/Federalist in the 1805 election
 
-```{r pressure, echo=FALSE}
-plot(mtcars)
+To make better sense of this information, a logical step is to connect the support for the independents in the 1790s with the support for the Republicans during the 19th century. This combined group would closely resemble what many would call the Anti-Federalists. A similar operation can be performed that connects the Constitutional/Federalists with the Federalists before and after the 1805 election. This process results in a much cleaner visualization (shown below). 
+
+```{r viz2, echo=FALSE}
+nnv3 %>%
+  filter(office == "Governor") %>%
+  group_by(affiliation, year) %>%
+  top_n(1, vote) %>%
+  filter(affiliation_grouped %in% c("Federalist", "Anti-Federalist")) %>%
+  ggplot(aes(x = year, y = vote, color = affiliation_grouped)) +
+  geom_point() +
+  geom_line() +
+  labs(title= "Gubernatorial Elections for Pennsylvania",
+       x = "Year",
+       y = "Number of Votes",
+       color= "Party Affiliaiton",
+       caption = "Note: In this graph, the Anti-Federalist category consists of the Republican and Independent affiliaitons \n and the Federalist category consists of the Federalsit and Federalist/Constitutional affiliations.\n Based on data from the New Nation Votes dataset (http://elections.lib.tufts.edu/)") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+    theme(legend.position="bottom")
 ```
-HEY
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+This chart appears unremarkable except for the strong Federalist support in the 1805 election and the upswing in Federalist support during the 1810s. If one were to use this chart to argue that the Federalist support surged in Pennsylvania circa 1805, they would be obfuscating a much more complex story and advancing an inaccurate narrative. So what accounts for this anomaly? 
+A logical suspicion would be that there might be some sort of strong regional shift as the result of a major political, economic, or military event. However, there does not appear to be a significant regional difference between the voting patterns in the different parts of Pennsylvania. While eastern PA and western PA depended upon different economies and had significant disagreements in the past (the Whiskey Rebellion & the lack of frontier defense spending), these differences are not indicating by the voting returns (see below).
+
+```{r viz3, echo=FALSE}
+nnv3 %>%
+  filter(office == "Governor") %>%
+  group_by(affiliation_grouped, year, region) %>%
+  filter(region %in% c("Eastern PA", "Central PA", "Western PA")) %>%
+  filter(affiliation_grouped %in% c("Federalist", "Anti-Federalist")) %>%
+  mutate(votes = sum(vote, na.rm = TRUE)) %>%
+  ggplot(aes(x = year, y = votes, color = affiliation_grouped)) +
+  geom_point() +
+  geom_line() +
+  labs(title= "Gubernatorial Elections for Pennsylvania",
+       x = "Year",
+       y = "Number of Votes",
+       color= "Party Affiliaiton") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(legend.position="bottom") +
+  facet_wrap(~region)
+```
+
+Digging even further into the data, a possible explanation emerges when the actual candidates are taken into consideration. The original visualization noted that the 1805 Federalist support was actually support for the “Constitutional/Federalist” party. So perhaps this is not simply a continuation of Federalist support. Charting the election returns by year for each candidate highlights an important and otherwise hidden element. Thomas McKean (MacKean) switched parties and successfully won reelection as the Constitutional/Federalist of 1805. 
+
+```{r viz4, echo=FALSE, message= FALSE, fig.width=9,fig.height=4}
+nnv3 %>% 
+  filter(office == "Governor") %>%
+  group_by(year, affiliation_grouped) %>%
+ top_n(1, vote) %>%
+  filter(affiliation_grouped %in% c("Federalist", "Anti-Federalist")) %>%
+ggplot(aes(x = name, y = vote, color = affiliation_grouped)) +
+  geom_point() +
+  geom_line() +
+  labs(title= "Gubernatorial Elections for Pennsylvania",
+       x = "Candidate",
+       y = "Number of Votes",
+       color= "Party Affiliaiton") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(legend.position="bottom") +
+  coord_flip() +
+  facet_wrap(~year, ncol= 3, scale = "free_y")
+```
+
+Thus the surge of Federalist support can be partially explained by Thomas McKean’s decision to disassociate himself from the Republican or Anti-Federalist faction. Although he switched affiliations, his popularity probably allowed him to maintain support across the permeable party lines of early America.  Further research into why McKean switched affiliations might lead to evidence of growing Federalist support in Pennsylvania circa 1805 after all.
