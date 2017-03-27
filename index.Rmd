@@ -4,7 +4,7 @@ output:
   html_document: default
   html_notebook: default
 ---
-```{r}
+```{r echo=FALSE, results='asis'}
 rmd <- Sys.glob("*.Rmd")
 rmd <- rmd[rmd != "index.Rmd"]
 html <- sub(".Rmd", ".html", rmd)
