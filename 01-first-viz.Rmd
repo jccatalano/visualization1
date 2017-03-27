@@ -3,6 +3,7 @@ title: "Peculiar Federalist Support in Pennsylvania During the Early Republic"
 author: "Joshua Catalano"
 date: "March 20, 2017"
 output: html_document
+fig_caption: yes
 ---
 
 ```{r libraries, include=FALSE, message=FALSE}
@@ -69,7 +70,7 @@ When examining this graph, a researcher will notice several things:
 
 To make better sense of this information, a logical step is to connect the support for the independents in the 1790s with the support for the Republicans during the 19th century. This combined group would closely resemble what many would call the Anti-Federalists. A similar operation can be performed that connects the Constitutional/Federalists with the Federalists before and after the 1805 election. This process results in a much cleaner visualization (shown below). 
 
-```{r viz2, echo=FALSE}
+```{r viz2, echo=FALSE, fig.cap= "*Note: In this graph, the Anti-Federalist category consists of the Republican and Independent affiliaitons \n and the Federalist category consists of the Federalsit and Federalist/Constitutional affiliations.\n Based on data from the New Nation Votes dataset* (http://elections.lib.tufts.edu/)"}
 nnv3 %>%
   filter(office == "Governor") %>%
   group_by(affiliation, year) %>%
@@ -81,11 +82,12 @@ nnv3 %>%
   labs(title= "Gubernatorial Elections for Pennsylvania",
        x = "Year",
        y = "Number of Votes",
-       color= "Party Affiliaiton",
-       caption = "Note: In this graph, the Anti-Federalist category consists of the Republican and Independent affiliaitons \n and the Federalist category consists of the Federalsit and Federalist/Constitutional affiliations.\n Based on data from the New Nation Votes dataset (http://elections.lib.tufts.edu/)") +
+       color= "Party Affiliaiton", 
+       caption= "Based on data from the New Nation Votes dataset (http://elections.lib.tufts.edu/)") +
   theme(plot.title = element_text(hjust = 0.5)) +
     theme(legend.position="bottom")
 ```
+
 
 This chart appears unremarkable except for the strong Federalist support in the 1805 election and the upswing in Federalist support during the 1810s. If one were to use this chart to argue that the Federalist support surged in Pennsylvania circa 1805, they would be obfuscating a much more complex story and advancing an inaccurate narrative. So what accounts for this anomaly? 
 A logical suspicion would be that there might be some sort of strong regional shift as the result of a major political, economic, or military event. However, there does not appear to be a significant regional difference between the voting patterns in the different parts of Pennsylvania. While eastern PA and western PA depended upon different economies and had significant disagreements in the past (the Whiskey Rebellion & the lack of frontier defense spending), these differences are not indicating by the voting returns (see below).
@@ -103,7 +105,8 @@ nnv3 %>%
   labs(title= "Gubernatorial Elections for Pennsylvania",
        x = "Year",
        y = "Number of Votes",
-       color= "Party Affiliaiton") +
+       color= "Party Affiliaiton",
+       caption= "Based on data from the New Nation Votes dataset (http://elections.lib.tufts.edu/)") +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(legend.position="bottom") +
   facet_wrap(~region)
@@ -123,7 +126,8 @@ ggplot(aes(x = name, y = vote, color = affiliation_grouped)) +
   labs(title= "Gubernatorial Elections for Pennsylvania",
        x = "Candidate",
        y = "Number of Votes",
-       color= "Party Affiliaiton") +
+       color= "Party Affiliaiton",
+       caption= "Based on data from the New Nation Votes dataset (http://elections.lib.tufts.edu/)") +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(legend.position="bottom") +
   coord_flip() +
