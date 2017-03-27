@@ -40,6 +40,9 @@ nnv3 <- nnv %>%
   mutate(affiliation_grouped = fct_collapse(affiliation, 
     "Federalist" = c("Federalist", "Constitutional/Federalist"), "Anti-Federalist" = c("Republican", "Independent"))) %>% 
   mutate(region = fct_collapse(county, "Western PA" = c("Armstrong", "Beaver", "Butler","Crawford", "Erie", "Jefferson", "Indiana", "Westmoreland", "Westmoreland and Indiana", "Mercer", "Allegheny", "Washington", "Fayette", "Greene", "Somerset", "Venango"), "Eastern PA" = c("Bucks", "Berks", "Chester", "Columbia", "Dauphin", "Delaware", "Franklin", "Lancaster", "Luzerne", "Montgomery", "Northampton", "Pike", "Philadelphia", "Northumberland","Susquehanna",  "Wayne", "York"),  "Central PA" = c("Adams", "Bradford", "Cambria", "Centre", "Clearfield", "Lebanon", "Lehigh", "Lycoming", "McKean", "Warren", "Tioga", "Union", "Schuylkill", "Perry", "Franklin", "Bedford", "Huntingdon", "Cumberland", "Mifflin")))
+
+
+
 ```
 
 
