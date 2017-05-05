@@ -1,10 +1,14 @@
 ---
-title: "Peculiar Federalist Support in Pennsylvania During the Early Republic"
-author: "Joshua Catalano"
+title: 
 date: "March 20, 2017"
 output: html_document
 fig_caption: yes
 ---
+
+<center>
+<h1> Peculiar Federalist Support in Pennsylvania During the Early Republic </h1>
+<h3> Joshua Catalano </h3>
+</center>
 
 ```{r libraries, include=FALSE, message=FALSE}
 library(readr)
